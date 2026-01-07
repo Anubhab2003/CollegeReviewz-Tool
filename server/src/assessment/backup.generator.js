@@ -1,35 +1,22 @@
-/**
- * Generates backup career paths if primary paths are risky or blocked
- */
-export const generateBackupPaths = (careerResults) => {
-    const backups = [];
-  
-    for (const career of careerResults) {
-      if (career.tier === "GREEN") {
-        // Primary career found → generate soft backups
-        if (career.name.includes("MBBS")) {
-          backups.push(
-            "BSc Biology",
-            "Paramedical Sciences",
-            "Lab Technician"
-          );
-        }
-  
-        if (career.name.includes("Engineering")) {
-          backups.push(
-            "BSc Computer Science",
-            "Diploma in Engineering",
-            "IT Skill Certification"
-          );
-        }
-      }
-  
-      if (career.tier === "YELLOW") {
-        backups.push("General Degree + Skill Path");
-      }
-    }
-  
-    // Remove duplicates
-    return [...new Set(backups)];
-  };
-  
+// assessment/backup.generator.js
+
+export const generateBackups = (signals) => {
+  const backups = [];
+
+  if (signals.ACADEMIC < 60)
+    backups.push("Diploma or vocational programs");
+
+  if (signals.RISK < 60)
+    backups.push("Skill-based certifications");
+
+  if (signals.FINANCE < 50)
+    backups.push("Earn-while-you-learn programs");
+
+  if (signals.DISCIPLINE < 60)
+    backups.push("Short-term job-oriented courses");
+
+  if (backups.length === 0)
+    backups.push("General degree with internships");
+
+  return backups;
+};
