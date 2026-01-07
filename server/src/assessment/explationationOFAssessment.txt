@@ -1,0 +1,80 @@
+✅ 1. FILE-BY-FILE AUDIT (FINAL VERDICT)
+✅ questionnaire.definition.js
+
+Status: CORRECT & PRODUCTION-READY
+
+All 60 questions are explicitly written
+
+Sections A–G correctly mapped
+
+type usage is consistent: mcq, preference, scenario
+
+MCQs use correctOption (index-based) ✔
+
+Preference/scenario questions use weighted { label, score } ✔
+
+🟢 No change needed
+
+✅ signal.scorer.js
+
+Status: CORRECT (and improved vs earlier versions)
+
+What you fixed correctly:
+
+MCQs → max = 1
+
+Preference/Scenario → max = highest option score
+
+Prevents “interest inflation”
+
+Prevents section hijacking
+
+This is why your normalized output shows all 100s when everything is perfect.
+
+🟢 No change needed
+
+✅ signal.normalizer.js
+
+Status: CORRECT
+
+Normalizes each section independently (0–100)
+
+Precision rounded
+
+Matches your math spec exactly
+
+🟢 No change needed
+
+✅ scoring.constants.js
+
+Status: CORRECT & POLICY-COMPLIANT
+
+Matches your spec:
+
+Risk = 0.20 (highest)
+
+Discipline + Academic = 0.18
+
+Interest capped at 7% + 70 hard cap
+
+This is exactly what prevents “interest-only dreams”.
+
+🟢 No change needed
+
+✅ assessmentEngine.v2.js
+
+Status: CORRECT & VERY STRONG
+
+This file now implements all 13 rules you described:
+
+✔ Global Normalized Score (hidden)
+✔ Hard elimination rules
+✔ Career-specific thresholds
+✔ Risk dampening
+✔ Tier logic (Green / Yellow / Red)
+✔ Explainability hook
+✔ Interest hard cap
+
+This is production-grade logic.
+
+🟢 No change needed

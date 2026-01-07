@@ -1,6 +1,7 @@
 import express from "express"
 import dotenv from "dotenv"
 import {connectDB} from "./db/db.js"
+import assessmentRoutes from "./routes/assessment.routes.js"
 dotenv.config()
 
 //connect to database
@@ -11,6 +12,7 @@ const PORT=process.env.PORT || 5000
 
 //middleware
 app.use(express.json());
+app.use("/api/assessment", assessmentRoutes);
 
 
 //test route
