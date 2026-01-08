@@ -1,57 +1,85 @@
+// services/report.generator.js
 import PDFDocument from "pdfkit";
 import fs from "fs";
 import path from "path";
 
+const addPage = (doc) => doc.addPage();
+
 export const generateAssessmentReport = ({
   studentProfile,
-  careers,
-  backups
+  signals,
+  careers
 }) => {
-  const doc = new PDFDocument();
-  const fileName = `career-report-${studentProfile.studentId}.pdf`;
-  const filePath = path.join("reports", fileName);
+  const doc = new PDFDocument({ margin: 50 });
+  const filePath = path.join(
+    "reports",
+    `career-report-${studentProfile.studentId}.pdf`
+  );
 
   fs.mkdirSync("reports", { recursive: true });
   doc.pipe(fs.createWriteStream(filePath));
 
-  doc.fontSize(20).text("Career Assessment Report", { align: "center" });
+  // ─── COVER ───
+  doc.fontSize(22).text("Career Assessment Handbook", { align: "center" });
+  doc.moveDown(2);
+
+  doc.fontSize(12)
+    .text(`Student ID: ${studentProfile.studentId}`)
+    .text(`Class: ${studentProfile.currentClass}`)
+    .text(`Stream: ${studentProfile.stream}`)
+    .text(`Family Budget: ${studentProfile.familyAnnualBudget}`)
+    .text(`Loan Comfort: ${studentProfile.educationLoanComfort}`);
+
+  addPage(doc);
+
+  // ─── SIGNALS ───
+  doc.fontSize(16).text("Aptitude Breakdown");
   doc.moveDown();
 
-  doc.fontSize(12).text(`Student ID: ${studentProfile.studentId}`);
-  doc.text(`Class: ${studentProfile.currentClass}`);
-  doc.text(`Stream: ${studentProfile.stream}`);
-  doc.text(`Family Budget: ${studentProfile.familyAnnualBudget}`);
-  doc.moveDown();
-
-  doc.fontSize(14).text("Recommended Career Paths");
-  doc.moveDown(0.5);
-
-  careers.forEach((career, i) => {
-    doc.text(
-      `${i + 1}. ${career.name} (${career.tier})`,
-      { indent: 10 }
-    );
-    career.explanation.forEach((line) =>
-      doc.fontSize(10).text(`• ${line}`, { indent: 20 })
-    );
-    doc.moveDown(0.3);
+  Object.entries(signals).forEach(([k, v]) => {
+    doc.text(`${k.toUpperCase()}: ${v}/100`);
   });
 
-  if (backups.length > 0) {
-    doc.moveDown();
-    doc.fontSize(14).text("Backup Options");
-    backups.forEach((b, i) =>
-      doc.fontSize(11).text(`${i + 1}. ${b}`, { indent: 10 })
-    );
-  }
+  // ─── CAREERS ───
+  careers.forEach((career, i) => {
+    addPage(doc);
 
-  doc.moveDown();
-  doc
-    .fontSize(10)
-    .text(
-      "This report is guidance-based and considers aptitude, discipline, risk, and finance.",
-      { align: "center" }
+    doc.fontSize(16).text(`${i + 1}. ${career.name}`);
+    doc.moveDown();
+
+    doc.text(`Tier: ${career.tier}`);
+    doc.text(`Compatibility Score: ${career.compatibilityScore}%`);
+    doc.moveDown();
+
+    doc.text("Career Examples (India):");
+    career.examplesIndia?.forEach(e => doc.text(`• ${e}`));
+
+    doc.moveDown();
+    doc.text("Required Exams:");
+    career.exams?.forEach(e => doc.text(`• ${e}`));
+
+    doc.moveDown();
+    doc.text("Roadmap:");
+    career.roadmap?.forEach((r, idx) =>
+      doc.text(`${idx + 1}. ${r}`)
     );
+
+    doc.moveDown();
+    doc.text("Why Recommended:");
+    career.whyRecommended?.forEach(r => doc.text(`• ${r}`));
+
+    doc.moveDown();
+    doc.text("Why Not Recommended:");
+    career.whyNotRecommended?.forEach(r => doc.text(`• ${r}`));
+  });
+
+  // ─── CLOSING ───
+  addPage(doc);
+  doc.text(
+    "Thank you for choosing our Career Assessment Service.\n\n" +
+    "This report is a guide, not a restriction. Careers evolve, and so will you.\n\n" +
+    "Use this handbook as a compass — not a cage."
+  );
 
   doc.end();
   return filePath;

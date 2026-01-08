@@ -1,5 +1,4 @@
 // assessment/assessmentEngine.js
-
 import { SIGNAL_WEIGHTS, HARD_BLOCKS } from "./scoring.constants.js";
 
 const clamp = (v, min = 0, max = 100) =>
@@ -11,18 +10,6 @@ const computeGNS = (signals) => {
     total += (signals[key] || 0) * SIGNAL_WEIGHTS[key];
   }
   return clamp(Math.round(total));
-};
-
-const failsHardRules = (signals, financeCompatible) => {
-  if (signals.ACADEMIC < HARD_BLOCKS.ACADEMIC)
-    return "Low academic readiness";
-  if (signals.RISK < HARD_BLOCKS.RISK)
-    return "Low risk tolerance";
-  if (signals.DISCIPLINE < HARD_BLOCKS.DISCIPLINE)
-    return "Low discipline stability";
-  if (!financeCompatible)
-    return "Financial incompatibility";
-  return null;
 };
 
 const computeCCS = (signals, career) => {
@@ -42,22 +29,20 @@ const computeCCS = (signals, career) => {
 export const assessCareers = ({
   normalizedSignals,
   careerList,
-  financeCompatible
+  studentStream
 }) => {
   const gns = computeGNS(normalizedSignals);
-
-  const hardFail = failsHardRules(normalizedSignals, financeCompatible);
-  if (hardFail) {
-    return {
-      blocked: true,
-      Global_Normalized_Score: gns,
-      careers: []
-    };
-  }
-
   const results = [];
 
   for (const career of careerList) {
+    // 🚨 STREAM FILTER (CRITICAL FIX)
+    if (
+      !career.allowedStreams.includes("Any") &&
+      !career.allowedStreams.includes(studentStream)
+    ) {
+      continue;
+    }
+
     const ccs = computeCCS(normalizedSignals, career);
     if (ccs === 0) continue;
 
@@ -66,29 +51,25 @@ export const assessCareers = ({
     else if (ccs >= 0.9) tier = "YELLOW";
 
     results.push({
-      name: career.name,
+      careerId: career.id,
       tier,
-      compatibilityScore: Number(ccs.toFixed(2)),
-      explanation: career.explain(normalizedSignals)
+      compatibilityScore: Math.round(ccs * 100)
     });
   }
 
-  // 🚨 CRITICAL FIX — NEVER RETURN EMPTY
+  // SAFETY NET
   if (results.length === 0) {
     results.push({
-      name: "Foundational Career Path",
+      careerId: "FOUNDATIONAL",
       tier: "YELLOW",
-      compatibilityScore: 0.75,
-      explanation: [
-        "Your current profile does not align with high-risk careers.",
-        "A general pathway with skill-building is recommended."
-      ]
+      compatibilityScore: 70
     });
   }
 
   return {
-    blocked: false,
     Global_Normalized_Score: gns,
-    careers: results
+    careers: results.sort(
+      (a, b) => b.compatibilityScore - a.compatibilityScore
+    )
   };
 };

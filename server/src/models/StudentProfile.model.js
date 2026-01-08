@@ -1,3 +1,5 @@
+// models/StudentProfile.model.js
+
 import mongoose from "mongoose";
 
 const studentProfileSchema = new mongoose.Schema(
@@ -8,8 +10,8 @@ const studentProfileSchema = new mongoose.Schema(
     studentId: {
       type: String,
       required: true,
-      index: true,
-      unique: true
+      unique: true,
+      index: true
     },
 
     age: {
@@ -68,20 +70,21 @@ const studentProfileSchema = new mongoose.Schema(
     // ASSESSMENT SIGNAL OUTPUTS (0–100)
     // ─────────────────────────────
     assessmentSignals: {
-      cognitive: { type: Number, min: 0, max: 100 },
-      numeracy: { type: Number, min: 0, max: 100 },
-      academic: { type: Number, min: 0, max: 100 },
-      verbal: { type: Number, min: 0, max: 100 },
-      interest: { type: Number, min: 0, max: 100 },
-      discipline: { type: Number, min: 0, max: 100 },
-      risk: { type: Number, min: 0, max: 100 },
-      finance: { type: Number, min: 0, max: 100 }
+      cognitive: { type: Number, min: 0, max: 100, required: true },
+      numeracy: { type: Number, min: 0, max: 100, required: true },
+      academic: { type: Number, min: 0, max: 100, required: true },
+      verbal: { type: Number, min: 0, max: 100, required: true },
+      interest: { type: Number, min: 0, max: 100, required: true },
+      discipline: { type: Number, min: 0, max: 100, required: true },
+      risk: { type: Number, min: 0, max: 100, required: true },
+      finance: { type: Number, min: 0, max: 100, required: true }
     },
 
     globalScore: {
       type: Number,
       min: 0,
-      max: 100
+      max: 100,
+      required: true
     },
 
     assessmentVersion: {

@@ -1,59 +1,76 @@
+// controller/assessment.controller.js
 import StudentProfile from "../models/StudentProfile.model.js";
 import { scoreSignals } from "../assessment/signal.scorer.js";
 import { normalizeSignals } from "../assessment/signal.normalizer.js";
 import { assessCareers } from "../assessment/assessmentEngine.js";
-import { generateBackups } from "../assessment/backup.generator.js";
+import careersMaster from "../data/careers.list.js";
 import { generateAssessmentReport } from "../services/report.generator.js";
-import careerList from "../data/careers.list.js";
 
 export const runAssessment = async (req, res) => {
   try {
     const { studentId, profileData, answers } = req.body;
 
     if (!studentId || !profileData || !answers) {
-      return res.status(400).json({
-        success: false,
-        error: "Missing assessment data"
-      });
+      return res.status(400).json({ success: false });
     }
 
     const rawSignals = scoreSignals(answers);
     const normalizedSignals = normalizeSignals(rawSignals);
 
-    const financeCompatible = true;
-
-    const result = assessCareers({
+    const engineResult = assessCareers({
       normalizedSignals,
-      careerList,
-      financeCompatible
+      careerList: careersMaster,
+      studentStream: profileData.stream
     });
 
-    const backups = generateBackups(normalizedSignals);
+    // 🔗 ENRICH CAREERS (CRITICAL)
+    const enrichedCareers = engineResult.careers.map((c) => {
+      const full = careersMaster.find(fc => fc.id === c.careerId);
+
+      if (!full) {
+        return {
+          name: "Foundational Career Path",
+          tier: c.tier,
+          compatibilityScore: c.compatibilityScore,
+          examplesIndia: ["General degree", "Skill programs"],
+          exams: [],
+          roadmap: [
+            "Strengthen fundamentals",
+            "Explore interests",
+            "Skill-based learning"
+          ],
+          whyRecommended: ["Safe starting point"],
+          whyNotRecommended: []
+        };
+      }
+
+      return {
+        ...full,
+        tier: c.tier,
+        compatibilityScore: c.compatibilityScore
+      };
+    });
 
     const studentProfile = await StudentProfile.create({
       studentId,
       ...profileData,
       assessmentSignals: normalizedSignals,
-      globalScore: result.Global_Normalized_Score
+      globalScore: engineResult.Global_Normalized_Score
     });
 
-    const pdfPath = generateAssessmentReport({
+    const reportPath = generateAssessmentReport({
       studentProfile,
-      careers: result.careers,
-      backups
+      signals: normalizedSignals,
+      careers: enrichedCareers
     });
 
     res.json({
       success: true,
-      careers: result.careers,
-      backups,
-      pdfPath
+      reportPath,
+      careers: enrichedCareers
     });
   } catch (err) {
     console.error(err);
-    res.status(500).json({
-      success: false,
-      error: "Career assessment failed"
-    });
+    res.status(500).json({ success: false });
   }
 };

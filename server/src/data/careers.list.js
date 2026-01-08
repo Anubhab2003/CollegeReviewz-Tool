@@ -1,201 +1,299 @@
-// src/data/careers.list.js
-
 const careers = [
-  // ───────── MEDICAL ─────────
-  {
-    id: "MBBS",
-    name: "Doctor (MBBS)",
-    minSignals: {
-      ACADEMIC: 65,
-      DISCIPLINE: 60,
-      RISK: 55,
-      COGNITIVE: 60,
-      FINANCE: 65
-    },
-    durationYears: 6,
-    costLevel: "HIGH",
 
-    explain: (signals) => {
-      const reasons = [];
-      if (signals.ACADEMIC >= 70)
-        reasons.push("Strong science academic foundation");
-      if (signals.DISCIPLINE >= 60)
-        reasons.push("High long-term discipline and patience");
-      if (signals.RISK < 60)
-        reasons.push("Very high competition — backups essential");
-      reasons.push("Delayed income with long training period");
-      return reasons;
-    }
-  },
-
-  // ───────── ENGINEERING ─────────
+  /* ───────────────── ENGINEERING & TECHNOLOGY ───────────────── */
   {
-    id: "ENGINEERING",
-    name: "Engineering (B.Tech)",
+    id: "ENGINEERING_TECH",
+    name: "Engineering & Technology",
+    category: "Technology",
+    allowedStreams: ["Science"],
+  
+    durationYears: "4–6",
+    costLevel: "MEDIUM–HIGH",
+  
+    roles: [
+      "Software Engineer",
+      "Full Stack Developer",
+      "AI Engineer",
+      "Data Scientist",
+      "Cloud Engineer",
+      "Cybersecurity Analyst",
+      "Blockchain Developer",
+      "Embedded Systems Engineer",
+      "Robotics Engineer",
+      "DevOps Engineer",
+      "Game Developer",
+      "Mobile App Developer",
+      "ML Researcher",
+      "Systems Architect",
+      "Product Engineer",
+      "QA Engineer",
+      "Site Reliability Engineer"
+    ],
+  
+    exams: [
+      "JEE Main",
+      "JEE Advanced",
+      "BITSAT",
+      "State Engineering Exams",
+      "University Entrance Tests"
+    ],
+  
+    bestInstitutesIndia: [
+      "IITs",
+      "NITs",
+      "IIIT Hyderabad",
+      "BITS Pilani",
+      "VIT",
+      "Manipal"
+    ],
+  
+    bestInstitutesAbroad: [
+      "MIT",
+      "Stanford",
+      "ETH Zurich",
+      "University of Toronto",
+      "Carnegie Mellon"
+    ],
+  
+    feesIndia: "₹1.5L – ₹12L total",
+    feesAbroad: "$80k – $250k total",
+  
     minSignals: {
       COGNITIVE: 60,
       NUMERACY: 55,
-      DISCIPLINE: 50,
-      RISK: 45,
-      FINANCE: 50
+      DISCIPLINE: 50
     },
-    durationYears: 4,
-    costLevel: "MEDIUM",
-
-    explain: (signals) => {
-      const reasons = [];
-      if (signals.COGNITIVE >= 65)
-        reasons.push("Strong logical problem-solving ability");
-      if (signals.NUMERACY >= 55)
-        reasons.push("Adequate quantitative comfort");
-      if (signals.DISCIPLINE < 55)
-        reasons.push("Consistency improvement recommended");
-      reasons.push("Multiple specialization and exit options");
-      return reasons;
-    }
-  },
-
-  // ───────── SKILL TECH ─────────
-  {
-    id: "SKILL_TECH",
-    name: "Skill-Based Tech (Web / Data / Cloud)",
-    minSignals: {
-      COGNITIVE: 55,
-      DISCIPLINE: 50,
-      RISK: 35,
-      FINANCE: 35
-    },
-    durationYears: 1,
-    costLevel: "LOW",
-
-    explain: () => [
-      "Faster entry into job market",
-      "Low financial burden",
-      "Requires self-discipline and continuous learning"
+  
+    roadmap: [
+      "Class 11–12 with PCM",
+      "Clear engineering entrance exams",
+      "B.Tech / BS degree",
+      "Internships + projects",
+      "Placements / MS / Startups"
+    ],
+  
+    whyRecommended: [
+      "Strong logical reasoning",
+      "Global demand",
+      "High income ceiling"
+    ],
+  
+    whyNotRecommended: [
+      "High competition",
+      "Fast-changing skill requirements",
+      "Burnout risk"
     ]
   },
-
-  // ───────── COMMERCE ─────────
+  
+  /* ───────────────── MEDICAL & HEALTHCARE ───────────────── */
   {
-    id: "COMMERCE_GENERAL",
-    name: "Commerce (B.Com / Accounting)",
+    id: "MEDICAL_HEALTH",
+    name: "Medical & Healthcare",
+    category: "Healthcare",
+    allowedStreams: ["Science"],
+  
+    durationYears: "3–10",
+    costLevel: "HIGH",
+  
+    roles: [
+      "MBBS Doctor",
+      "Surgeon",
+      "Dentist",
+      "Veterinarian",
+      "Pharmacist",
+      "Nurse",
+      "Physiotherapist",
+      "Psychologist",
+      "Public Health Specialist",
+      "Medical Researcher",
+      "Radiologist",
+      "Anesthesiologist",
+      "Healthcare Administrator"
+    ],
+  
+    exams: [
+      "NEET UG",
+      "NEET PG",
+      "AIIMS Entrance",
+      "Foreign Medical Exams"
+    ],
+  
+    bestInstitutesIndia: [
+      "AIIMS",
+      "JIPMER",
+      "CMC Vellore",
+      "AFMC"
+    ],
+  
+    bestInstitutesAbroad: [
+      "Harvard Medical School",
+      "Johns Hopkins",
+      "Oxford",
+      "Karolinska Institute"
+    ],
+  
+    feesIndia: "₹5L – ₹1Cr total",
+    feesAbroad: "$150k – $400k total",
+  
     minSignals: {
-      ACADEMIC: 50,
-      NUMERACY: 50,
-      DISCIPLINE: 45,
-      FINANCE: 40
+      ACADEMIC: 70,
+      DISCIPLINE: 65,
+      RISK: 60
     },
-    durationYears: 3,
-    costLevel: "LOW",
-
-    explain: () => [
-      "Stable academic pathway",
-      "Lower competition pressure",
-      "Good base for CA / MBA / Finance roles"
+  
+    roadmap: [
+      "Class 11–12 PCB",
+      "Clear NEET",
+      "MBBS / Allied degree",
+      "Residency / specialization",
+      "Practice / Research"
+    ],
+  
+    whyRecommended: [
+      "Service-oriented mindset",
+      "Long-term career stability",
+      "High social respect"
+    ],
+  
+    whyNotRecommended: [
+      "Very long study duration",
+      "High financial load",
+      "Emotional stress"
     ]
   },
-
-  // ───────── CA / CFA ─────────
+  
+  /* ───────────────── GOVERNMENT & CIVIL SERVICES ───────────────── */
   {
-    id: "CHARTERED_ACCOUNTANT",
-    name: "Chartered Accountant (CA)",
+    id: "GOVERNMENT_SERVICES",
+    name: "Government & Public Service",
+    category: "Government",
+    allowedStreams: ["Any"],
+  
+    durationYears: "2–6",
+    costLevel: "LOW",
+  
+    roles: [
+      "IAS",
+      "IPS",
+      "IFS",
+      "IRS",
+      "State PSC Officer",
+      "SSC Officer",
+      "Bank PO",
+      "RBI Officer",
+      "Policy Analyst",
+      "Municipal Commissioner"
+    ],
+  
+    exams: [
+      "UPSC CSE",
+      "State PSC",
+      "SSC CGL",
+      "Banking Exams"
+    ],
+  
+    bestInstitutesIndia: [
+      "LBSNAA",
+      "RBI Training College",
+      "State Administrative Academies"
+    ],
+  
+    feesIndia: "₹50k – ₹3L total",
+  
     minSignals: {
-      ACADEMIC: 65,
       DISCIPLINE: 65,
       RISK: 60,
-      NUMERACY: 60,
-      FINANCE: 45
+      VERBAL: 55
     },
-    durationYears: 5,
-    costLevel: "LOW",
-
-    explain: () => [
-      "High failure rate — resilience is critical",
-      "Long preparation with delayed rewards",
-      "Strong financial and audit career payoff"
+  
+    roadmap: [
+      "Any graduation",
+      "1–3 years exam preparation",
+      "Clear Prelims + Mains + Interview",
+      "Government training"
+    ],
+  
+    whyRecommended: [
+      "Stable career",
+      "Public service impact",
+      "Authority and responsibility"
+    ],
+  
+    whyNotRecommended: [
+      "Low success rate",
+      "Uncertain timelines",
+      "High pressure"
     ]
   },
-
-  // ───────── GOVERNMENT ─────────
+  
+  /* ───────────────── CREATIVE, MEDIA & DESIGN ───────────────── */
   {
-    id: "GOVT_EXAMS",
-    name: "Government Exams (SSC / Banking / State PSC)",
-    minSignals: {
-      ACADEMIC: 50,
-      DISCIPLINE: 60,
-      RISK: 55,
-      FINANCE: 40
-    },
-    durationYears: 3,
-    costLevel: "LOW",
-
-    explain: () => [
-      "Uncertain timelines and high competition",
-      "Stable career if cleared",
-      "Backups strongly recommended"
-    ]
-  },
-
-  // ───────── MANAGEMENT ─────────
-  {
-    id: "MBA",
-    name: "Management (MBA)",
-    minSignals: {
-      COGNITIVE: 55,
-      VERBAL: 55,
-      DISCIPLINE: 50,
-      FINANCE: 60,
-      RISK: 45
-    },
-    durationYears: 2,
-    costLevel: "HIGH",
-
-    explain: () => [
-      "Strong communication and leadership required",
-      "ROI depends on institute quality",
-      "Networking plays major role"
-    ]
-  },
-
-  // ───────── CREATIVE ─────────
-  {
-    id: "CREATIVE_FIELDS",
-    name: "Creative Fields (Design / Media / Content)",
+    id: "CREATIVE_MEDIA",
+    name: "Creative, Media & Design",
+    category: "Creative",
+    allowedStreams: ["Arts", "Commerce", "Science"],
+  
+    durationYears: "1–4",
+    costLevel: "LOW–MEDIUM",
+  
+    roles: [
+      "Journalist",
+      "Content Writer",
+      "UX Designer",
+      "Graphic Designer",
+      "Animator",
+      "Film Director",
+      "Cinematographer",
+      "Photographer",
+      "Fashion Designer",
+      "Interior Designer",
+      "Game Artist",
+      "Creative Director",
+      "YouTuber",
+      "Podcaster"
+    ],
+  
+    exams: [
+      "NIFT",
+      "NID",
+      "Journalism Entrances",
+      "Portfolio Reviews"
+    ],
+  
+    bestInstitutesIndia: [
+      "NID",
+      "NIFT",
+      "FTII",
+      "IISc Design"
+    ],
+  
+    feesIndia: "₹1L – ₹10L total",
+  
     minSignals: {
       INTEREST: 65,
-      RISK: 55,
-      DISCIPLINE: 45,
-      FINANCE: 40
+      RISK: 55
     },
-    durationYears: 3,
-    costLevel: "MEDIUM",
-
-    explain: () => [
-      "Portfolio matters more than degrees",
-      "Income instability initially",
-      "High upside for persistent creators"
-    ]
-  },
-
-  // ───────── ENTREPRENEURSHIP ─────────
-  {
-    id: "ENTREPRENEURSHIP",
-    name: "Entrepreneurship / Startup",
-    minSignals: {
-      RISK: 70,
-      DISCIPLINE: 60,
-      COGNITIVE: 55,
-      FINANCE: 50
-    },
-    durationYears: 0,
-    costLevel: "VARIABLE",
-
-    explain: () => [
-      "High uncertainty and failure risk",
-      "Self-motivation is non-negotiable",
-      "Strong learning-by-doing path"
+  
+    roadmap: [
+      "Build portfolio",
+      "Learn tools",
+      "Internships + freelancing",
+      "Specialize in niche"
+    ],
+  
+    whyRecommended: [
+      "Creative independence",
+      "Portfolio-based growth",
+      "Multiple income streams"
+    ],
+  
+    whyNotRecommended: [
+      "Income instability",
+      "Requires self-marketing"
     ]
   }
-];
-
-export default careers;
+  
+  ];
+  
+  export default careers;
+  
