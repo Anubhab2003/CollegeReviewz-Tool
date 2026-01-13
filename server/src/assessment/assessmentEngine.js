@@ -111,7 +111,7 @@ const computeCCS = (signals, career) => {
     const actual = signals[key];
 
     if (!isNumber(actual)) return 0;
-    if (actual < required * 0.75) return 0;
+    if (actual < required * 0.75) return 0;//CAREER OPTION PASSED, IF NOT THEN CAREER REJECTED....
 
     sum += Math.min(actual / required, 1.1);
     count++;
@@ -155,7 +155,7 @@ export const assessCareers = ({
       ccs *= 0.7;
     }
 
-    let tier = "RED";
+    let tier = "RED";//RED IS THE LOWEST TIER, GREEN IS THE HIGHEST TIER
     if (ccs >= 1.0) tier = "GREEN";
     else if (ccs >= 0.85) tier = "YELLOW";
 
@@ -166,7 +166,7 @@ export const assessCareers = ({
     });
   }
 
-  /* SAFETY NET — ENSURE REPRESENTATION */
+  /* SAFETY NET — ENSURE REPRESENTATION */ 
 if (results.length < 3 && primary.length) {
   primary.forEach((id) => {
     if (!results.find(r => r.careerId === id)) {
