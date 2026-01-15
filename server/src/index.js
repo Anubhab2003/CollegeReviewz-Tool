@@ -24,9 +24,24 @@ app.use(
   );
   
 
+// 🔹 Allow frontend in dev only
+if (process.env.NODE_ENV !== "production") {
+    app.use(cors({ origin: "http://localhost:3000" }));
+}
+
 //middleware
 app.use(express.json());
 app.use("/api/assessment", assessmentRoutes);
+
+// 🔹 PRODUCTION: Serve React build
+if (process.env.NODE_ENV === "production") {
+    const __dirname = path.resolve();
+    app.use(express.static(path.join(__dirname, "client/build")));
+  
+    app.get("*", (req, res) => {
+      res.sendFile(path.join(__dirname, "client/build/index.html"));
+    });
+}
 
 
 //test route

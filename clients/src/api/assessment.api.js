@@ -1,10 +1,27 @@
 // src/api/assessment.api.js
 import axios from "axios";
 
+/**
+ * Axios instance
+ * - Localhost  → http://localhost:5000
+ * - Production → same origin (Render URL)
+ */
 const API = axios.create({
-  baseURL: "http://localhost:5000",
-  timeout: 15000
+  baseURL:
+    process.env.NODE_ENV === "production"
+      ? "" // same domain in production
+      : "http://localhost:5000",
+  timeout: 15000,
+  headers: {
+    "Content-Type": "application/json"
+  }
 });
 
-export const runAssessment = (payload) =>
-  API.post("/api/assessment/run", payload); // ✅ MATCHES BACKEND
+/**
+ * Run Career Assessment
+ * Backend Route:
+ * POST /api/assessment/run
+ */
+export const runAssessment = (payload) => {
+  return API.post("/api/assessment/run", payload);
+};
