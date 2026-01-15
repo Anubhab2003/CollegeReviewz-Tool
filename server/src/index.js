@@ -36,10 +36,10 @@ app.use("/api/assessment", assessmentRoutes);
 // 🔹 PRODUCTION: Serve React build
 if (process.env.NODE_ENV === "production") {
     const __dirname = path.resolve();
-    app.use(express.static(path.join(__dirname, "client/build")));
+    app.use(express.static(path.join(__dirname, "clients/build")));
   
-    app.get("*", (req, res) => {
-      res.sendFile(path.join(__dirname, "client/build/index.html"));
+    app.get("/*splat", (req, res) => {
+      res.sendFile(path.join(__dirname, "clients/build/index.html"));
     });
 }
 
