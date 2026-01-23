@@ -1,46 +1,61 @@
-// assessment/signal.scorer.js
+import { selectQuestionnaire } from "./questionnaire.selector.js";
 
-import questionnaireDefinition from "./questionnaire.definition.js";
+export const scoreSignals = (answers, currentClass) => {
+  if (!answers || typeof answers !== "object") {
+    throw new Error("Invalid answers payload");
+  }
 
-export const scoreSignals = (answers) => {
+  const questionnaire = selectQuestionnaire(currentClass);
+
+  if (!Array.isArray(questionnaire) || questionnaire.length !== 60) {
+    throw new Error(`Invalid questionnaire for class ${currentClass}`);
+  }
+
+  if (Object.keys(answers).length !== questionnaire.length) {
+    throw new Error(
+      `Answer count mismatch: expected ${questionnaire.length}, received ${Object.keys(answers).length}`
+    );
+  }
+
   const rawSignals = {};
 
-  questionnaireDefinition.forEach((q) => {
+  // 1️⃣ Max scores
+  questionnaire.forEach((q) => {
     if (!rawSignals[q.section]) {
       rawSignals[q.section] = { score: 0, max: 0 };
     }
 
     if (q.type === "mcq") {
-      const weight = q.difficulty || 1;
-      rawSignals[q.section].max += weight;
+      rawSignals[q.section].max += q.difficulty || 1;
     }
 
     if (q.type === "preference" || q.type === "scenario") {
-      const maxOptionScore = Math.max(
-        ...q.options.map((o) => o.score)
+      rawSignals[q.section].max += Math.max(
+        ...q.options.map(o => o.score)
       );
-      rawSignals[q.section].max += maxOptionScore;
     }
   });
 
-  questionnaireDefinition.forEach((q) => {
+  // 2️⃣ Achieved scores
+  questionnaire.forEach((q) => {
     const userAnswer = answers[q.id];
     if (userAnswer === undefined) return;
 
     if (q.type === "mcq") {
-      const weight = q.difficulty || 1;
       if (userAnswer === q.correctOption) {
-        rawSignals[q.section].score += weight;
+        rawSignals[q.section].score += q.difficulty || 1;
       }
     }
 
     if (q.type === "preference" || q.type === "scenario") {
       const selected = q.options[userAnswer];
-      if (selected?.score) {
-        rawSignals[q.section].score += selected.score;
+      if (!selected) {
+        throw new Error(`Invalid option index for ${q.id}`);
       }
+      rawSignals[q.section].score += selected.score || 0;
     }
   });
 
-  return rawSignals;
+  Object.values(rawSignals).forEach(Object.freeze);
+  return Object.freeze(rawSignals);
 };

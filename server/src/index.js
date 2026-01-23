@@ -4,6 +4,8 @@ import {connectDB} from "./db/db.js"
 import assessmentRoutes from "./routes/assessment.routes.js"
 import cors from "cors"
 import path from "path";
+import questionnaireRoutes from "./routes/questionnaire.routes.js";
+
 
 dotenv.config()
 
@@ -32,6 +34,10 @@ if (process.env.NODE_ENV !== "production") {
 //middleware
 app.use(express.json());
 app.use("/api/assessment", assessmentRoutes);
+
+
+app.use("/api/questionnaire", questionnaireRoutes);
+
 
 // 🔹 PRODUCTION: Serve React build
 if (process.env.NODE_ENV === "production") {

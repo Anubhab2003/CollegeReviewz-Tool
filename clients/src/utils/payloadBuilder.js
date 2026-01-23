@@ -8,6 +8,9 @@ export const buildPayload = ({ profileData, answers }) => {
   return {
     studentId: uniqueStudentId,
     profileData: {
+      name: profileData.name,
+      phoneNumber: profileData.phoneNumber,
+      openToAbroad: profileData.openToAbroad,
       age: Number(profileData.age),
       currentClass: profileData.currentClass,
       stream: profileData.stream,

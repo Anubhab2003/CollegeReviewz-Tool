@@ -1,90 +1,60 @@
-import React from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 
-const arrowAnim = {
-  animate: {
-    x: [0, 80, 0],
-  },
-  transition: {
-    duration: 1.8,
-    repeat: Infinity,
-    ease: "easeInOut",
-  },
-};
-
 const fadeIn = {
-  initial: { opacity: 0, scale: 0.9 },
+  initial: { opacity: 0, scale: 0.95 },
   animate: { opacity: 1, scale: 1 },
 };
 
-const AssessmentSuccess = () => {
+export default function AssessmentSuccess({ reportPath }) {
   const navigate = useNavigate();
 
-  const handleRestart = () => {
-    navigate("/assessment"); // adjust route if needed
-  };
-
-  const handleDownload = () => {
-    // your existing PDF download logic
-    alert("PDF Download Triggered");
-  };
-
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-100 via-sky-100 to-purple-100 dark:from-slate-900 dark:to-black">
+    <motion.div
+      {...fadeIn}
+      transition={{ duration: 0.5 }}
+      className="w-full max-w-xl bg-slate-900/80 backdrop-blur-xl
+      rounded-3xl shadow-2xl p-10 text-center border border-indigo-500/30"
+    >
       <motion.div
-        {...fadeIn}
-        transition={{ duration: 0.6 }}
-        className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl
-        rounded-3xl shadow-2xl p-10 max-w-lg w-full text-center border-4 border-indigo-400"
+        animate={{ scale: [1, 1.2, 1] }}
+        transition={{ repeat: Infinity, duration: 1.6 }}
+        className="text-green-400 text-6xl mb-6"
       >
-        {/* ✅ Processing Arrow */}
-        <div className="flex justify-center mb-6 relative h-10">
-          <motion.div
-            className="absolute text-green-500 text-3xl font-bold"
-            {...arrowAnim}
-          >
-            ➜
-          </motion.div>
-        </div>
-
-        {/* ✅ Title */}
-        <h1 className="text-3xl font-extrabold mb-4 text-indigo-600">
-          Assessment Completed 🎉
-        </h1>
-
-        {/* ✅ Subtitle */}
-        <p className="text-gray-700 dark:text-gray-300 mb-10">
-          Your Career report has been generated successfully.
-        </p>
-
-        {/* ✅ Buttons */}
-        <div className="flex flex-col gap-5">
-          {/* Download Button */}
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={handleDownload}
-            className="w-full py-4 rounded-xl bg-indigo-500 text-white
-            font-bold text-lg shadow-lg"
-          >
-            📄 Download Career Report (PDF)
-          </motion.button>
-
-          {/* Restart Button */}
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={handleRestart}
-            className="w-full py-4 rounded-xl bg-green-500 text-white
-            font-bold text-lg shadow-lg"
-          >
-            🔁 Take Assessment Again
-          </motion.button>
-        </div>
+        ✔
       </motion.div>
-    </div>
-  );
-};
 
-export default AssessmentSuccess;
+      <h1 className="text-3xl font-extrabold text-indigo-400 mb-3">
+        Assessment Completed
+      </h1>
+
+      <p className="text-slate-300 mb-10">
+        Your career report has been generated successfully.
+      </p>
+
+      <div className="flex flex-col gap-4">
+        {/* DOWNLOAD */}
+        <motion.button
+          whileHover={{ scale: 1.04 }}
+          whileTap={{ scale: 0.96 }}
+          onClick={() => navigate("/report", { state: { reportPath } })}
+          className="w-full py-4 rounded-xl bg-indigo-600
+          text-white font-bold text-lg shadow-lg"
+        >
+          📄 Download PDF Report
+        </motion.button>
+
+        {/* RESTART */}
+        <motion.button
+          whileHover={{ scale: 1.04 }}
+          whileTap={{ scale: 0.96 }}
+          onClick={() => navigate("/assessment")}
+          className="w-full py-4 rounded-xl bg-emerald-500
+          text-white font-bold text-lg shadow-lg"
+        >
+          🔁 Take Assessment Again
+        </motion.button>
+      </div>
+    </motion.div>
+  );
+}

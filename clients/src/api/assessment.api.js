@@ -25,3 +25,10 @@ const API = axios.create({
 export const runAssessment = (payload) => {
   return API.post("/api/assessment/run", payload);
 };
+
+export const fetchQuestionnaire = (currentClass) => {
+  return API.get(
+    `/api/questionnaire/${encodeURIComponent(currentClass)}`
+  );
+};
+

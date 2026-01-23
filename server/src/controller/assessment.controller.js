@@ -1,5 +1,3 @@
-// controller/assessment.controller.js
-
 import StudentProfile from "../models/StudentProfile.model.js";
 import { scoreSignals } from "../assessment/signal.scorer.js";
 import { normalizeSignals } from "../assessment/signal.normalizer.js";
@@ -19,8 +17,6 @@ const computeFinanceSignal = (profile) => {
   }
 };
 
-/* ───────────────── NORMALIZED → MODEL SIGNALS ───────────────── */
-
 const toModelSignals = (signals, profile) => ({
   cognitive: signals.COGNITIVE ?? 0,
   numeracy: signals.NUMERACY ?? 0,
@@ -39,38 +35,34 @@ export const runAssessment = async (req, res) => {
     const { studentId, profileData, answers } = req.body;
 
     if (!studentId || !profileData || !answers) {
-      return res.status(400).json({ success: false, error: "Invalid payload" });
+      return res.status(400).json({
+        success: false,
+        error: "Invalid payload"
+      });
     }
 
-    /* STEP 1: Score + Normalize */
-    const rawSignals = scoreSignals(answers);
+    /* STEP 1 */
+    const rawSignals = scoreSignals(answers, profileData.currentClass);
     const normalizedSignals = normalizeSignals(rawSignals);
 
-    /* STEP 2: Career Assessment */
+    /* STEP 2 */
     const assessment = assessCareers({
       normalizedSignals,
       careerList: careersMaster,
       studentStream: profileData.stream
     });
 
-    if (typeof assessment.globalScore !== "number") {
-      throw new Error("globalScore missing from assessment engine");
-    }
-
-    /* STEP 3: Enrich Careers (🚨 HARD FILTER undefined) */
+    /* STEP 3 */
     const enrichedCareers = assessment.careers
-      .map((c) => {
+      .map(c => {
         const full = careersMaster.find(x => x.id === c.careerId);
-        if (!full) return null; // 🚨 CRITICAL FIX
-        return {
-          ...full,
-          tier: c.tier,
-          compatibilityScore: c.compatibilityScore
-        };
+        return full
+          ? { ...full, tier: c.tier, compatibilityScore: c.compatibilityScore }
+          : null;
       })
-      .filter(Boolean); // 🚨 REMOVE undefined COMPLETELY
+      .filter(Boolean);
 
-    /* STEP 4: Persist Profile */
+    /* STEP 4 */
     const studentProfile = await StudentProfile.create({
       studentId,
       ...profileData,
@@ -78,25 +70,31 @@ export const runAssessment = async (req, res) => {
       globalScore: assessment.globalScore
     });
 
-    /* STEP 5: Generate Report */
-    const reportPath = generateAssessmentReport({
+    /* STEP 5 — FIRE & FORGET PDF */
+    generateAssessmentReport({
       studentProfile,
       signals: toModelSignals(normalizedSignals, profileData),
       careers: enrichedCareers
     });
-    // 🔥 ADD THIS BLOCK HERE
-    const baseUrl =
+
+    /* STEP 6 — YOU ALREADY KNOW THE FILE NAME */
+    const reportFileName = `career-report-${studentProfile.studentId}.pdf`;
+
+    const BASE_URL =
       process.env.NODE_ENV === "production"
         ? process.env.BASE_URL
         : "http://localhost:5000";
 
-    const reportUrl = `${baseUrl}/reports/career-report-${studentId}.pdf`;
+    const reportUrl = `${BASE_URL}/reports/${reportFileName}`;
 
-    res.json({ success: true, reportPath });
+    return res.json({
+      success: true,
+      reportUrl
+    });
 
   } catch (err) {
     console.error("ASSESSMENT ERROR:", err);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       error: err.message
     });

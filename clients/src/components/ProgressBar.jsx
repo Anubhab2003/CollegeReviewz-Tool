@@ -1,23 +1,14 @@
-const ProgressBar = ({ current, total }) => {
-    const percent = Math.round((current / total) * 100);
-  
-    return (
-      <div style={{ marginBottom: 20 }}>
-        <div style={{ marginBottom: 5 }}>
-          Progress: {percent}%
-        </div>
-        <div style={{ height: 10, background: "#ddd" }}>
-          <div
-            style={{
-              height: "100%",
-              width: `${percent}%`,
-              background: "#4caf50"
-            }}
-          />
-        </div>
+export default function ProgressBar({ current = 1, total = 1 }) {
+  const percent = Math.round((current / total) * 100);
+
+  return (
+    <div className="mb-6">
+      <div className="h-2 w-full rounded-full bg-gray-700">
+        <div
+          className="h-2 rounded-full bg-gradient-to-r from-purple-500 to-indigo-500 transition-all"
+          style={{ width: `${percent}%` }}
+        />
       </div>
-    );
-  };
-  
-  export default ProgressBar;
-  
+    </div>
+  );
+}

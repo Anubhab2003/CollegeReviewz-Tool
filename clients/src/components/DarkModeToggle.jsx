@@ -1,10 +1,10 @@
 export default function DarkModeToggle({ darkMode, setDarkMode }) {
   return (
     <button
-      onClick={() => setDarkMode(!darkMode)}
-      className="fixed top-4 right-4 z-50 px-4 py-2 rounded-full bg-gray-900 text-white dark:bg-white dark:text-black shadow-lg"
+      onClick={() => setDarkMode(prev => !prev)}
+      className="rounded-lg border px-4 py-2 text-sm text-white"
     >
-      {darkMode ? "☀ Light" : "🌙 Dark"}
+      {darkMode ? "🌙 Dark" : "☀️ Light"}
     </button>
   );
 }

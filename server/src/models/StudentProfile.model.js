@@ -13,6 +13,19 @@ const studentProfileSchema = new mongoose.Schema(
       unique: true,
       index: true
     },
+    name:{
+      type:String,
+      required:true,
+    },
+    phoneNumber:{
+      type:Number,
+      required:true
+    },
+    openToAbroad:{
+      type:Boolean,
+      required:true,
+      
+    },
 
     age: {
       type: Number,
