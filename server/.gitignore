@@ -60,4 +60,7 @@ docker-compose.override.yml
 *.pid
 /*.seed
 
-.env.production
+# Environment
+.env
+.env.production      
+.env.*.local
